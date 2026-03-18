@@ -1,0 +1,95 @@
+# Git 초급
+
+## Git의 단계 (Commit 이해)
+
+| 단계 | 설명 |
+|------|------|
+| **Working Directory** | 내가 실제 작업하는 프로젝트 폴더 |
+| **Staging Area** | `git add`로 추가한 파일들이 대기하는 공간 |
+| **Repository** | `git commit`으로 최종 저장되는 Git 저장소 |
+```
+Working Directory → (git add) → Staging Area → (git commit) → Repository
+```
+
+---
+
+## 파일의 생명주기
+
+| 상태 | 설명 |
+|------|------|
+| **Untracked** | Git이 아직 추적하지 않는 파일 (한 번도 add 안 됨) |
+| **Unmodified** | add 후 commit까지 완료, 수정사항 없음 (= new file) |
+| **Modified** | commit 이후 파일이 수정된 상태 |
+| **Staged** | `git add` 완료, Staging Area에 반영된 상태 |
+```
+Untracked → (git add) → Unmodified → (파일 수정) → Modified → (git add) → Staged → (git commit) → Unmodified
+```
+
+---
+
+## Commit 사용법
+```bash
+git commit 파일명 -m "커밋 메시지"
+
+# 예시
+git commit a.txt -m "a.txt 추가"
+```
+
+---
+
+## 커밋 로그 확인
+```bash
+git log
+```
+
+---
+
+## 이전 버전으로 원복
+
+### reset vs revert
+
+| 구분 | 방식 | 히스토리 | 협업 |
+|------|------|---------|------|
+| `reset` | 원하는 시점으로 이동 후 이후 커밋 삭제 | ❌ 삭제됨 | ⚠️ 주의 |
+| `revert` | 되돌리는 새 커밋을 생성 | ✅ 유지됨 | ✅ 권장 |
+
+---
+
+## reset 사용법
+```bash
+git reset --soft [commit ID]   # 커밋만 취소, 파일은 Staging Area에 유지
+git reset --mixed [commit ID]  # 커밋 + 스테이징 취소, 파일은 Working Directory에 유지 (기본값)
+git reset --hard [commit ID]   # 커밋 + 파일 변경사항 모두 삭제
+```
+
+> ⚠️ `--hard`는 복구 불가! 신중하게 사용
+
+---
+
+## revert 사용법
+```bash
+git revert [commit ID]
+```
+
+- 히스토리가 유지되어 **왜 되돌렸는지 기록** 가능
+- 협업 시 **코드 충돌 최소화**
+- 이미 푸시한 커밋 되돌릴 때 **revert 권장**
+
+---
+
+## Sourcetree에서 reset / revert
+
+### reset
+1. **History** 탭에서 되돌아갈 커밋 우클릭
+2. **이 커밋까지 현재 브랜치를 초기화** 클릭
+3. 모드 선택
+   - `Soft` : 모든 로컬 변경사항 유지
+   - `Mixed` : 작업 상태는 유지, 인덱스는 리셋
+   - `Hard` : 모든 변경사항 버림
+
+### revert
+1. **History** 탭에서 되돌릴 커밋 우클릭
+2. **커밋 되돌리기** 클릭
+
+> 💡 협업 중이라면 reset 대신 **revert 사용 권장**
+
